@@ -1,0 +1,177 @@
+[ Bug ]
+
+
+##########################################################################################
+[ ToDo ]
+
+
+##########################################################################################
+[ Evolution previsionnel du programme]
+
+20160126
+    - Un script local sur le RPi
+        ==> Traitemant : Fait
+    
+    - Un script resau controllant le script du Pi
+        ==> Traitemant : A venir
+        
+    - un interface graphique exploitant le script resau
+        ==> Traitemant : A venir
+        
+    - Intégrer la reconstruction 3D directement dans l'interface graphique
+        ==> Traitemant : A venir
+
+##########################################################################################
+[ LOG ]
+
+Fichier         : mainPi.py
+version         : 2016.01.22
+branch          : master
+Modification    : 
+        - Creation du fichier 'mainPi.py'
+        
+------------------------------------------------------------------------------------------
+
+Fichier         : moteurPap.py
+version         : 2016.01.24
+branch          : master
+Modification    : 
+        - Convertion du contenue du fichier 'moteurPap.py' en une class
+        - Creation des methodes :
+            * __init__
+            * f_gpioInit
+            * f_gpioDestructor
+            * f_moveDeg
+            * f_moveStep
+            * f_convertDegToStep
+            * f_convertStepToDeg
+            
+------------------------------------------------------------------------------------------
+
+Fichier         : mainPi.py
+version         : 2016.01.25
+branch          : master
+Modification    : 
+        - Creation des instances 'i_Camera' et 'i_Pap'
+        - Creation des methodes suivantes dans la class 'C_ScanPi'
+            * __init__
+            * f_prev
+            * f_prevScan
+            * f_scan
+            * f_destructor
+        
+        
+Fichier         : moteurPap.py
+version         : 2016.01.25
+branch          : master
+Modification    : 
+        - Modification mineur dans le docType
+        
+------------------------------------------------------------------------------------------
+
+Fichier         : mainPi.py
+version         : 2016.01.26
+branch          : master
+Modification    : 
+        - Dans la methode '__init__' :
+            * suppression de la variable 'v_stepByStep'
+            * ajout de la variable 'v_totalStepCoef'
+            * modification du calcul pour la variable 'v_stepCoef'
+            * modification du docType de la methode
+            * ajout des variable 'v_long' et 'v_larg' puis remplacement
+                des valeur 1024 et 768 dans les objet i_Camera.resolution()
+            
+        - Creation du docType de la class 'C_Scan'
+        
+------------------------------------------------------------------------------------------
+
+Fichier         : mainPi.py
+version         : 2016.01.28
+branch          : master
+Modification    : 
+        - ajout des parametres contrast et luminosite a la creation 
+        de l'objet i_Camera
+        
+------------------------------------------------------------------------------------------
+
+Fichier         : mainPi.py
+version         : 2016.01.29
+branch          : master
+Modification    : 
+        - Creation de la methode 'f_initObj'
+        - Mise en commentaire des parametres de luminosite et de contrast
+        
+------------------------------------------------------------------------------------------
+
+Fichier         : mainPi.py
+version         : 2016.01.30
+branch          : master
+Modification    : 
+        - Modif mineur, ajout du docType de la methode 'f_initObj'
+        
+------------------------------------------------------------------------------------------
+
+Fichier         : mainPi.py
+version         : 2016.02.15
+branch          : master
+Modification    : 
+        - Modif mineur : ajout ajout de 'm_ --> Module au lexique
+        - Création de la methode 'f_test' + ajout d'une entree 't - test' dans
+        le menu
+        - Dans la methode 'f_prevScan', suppression de la temporisation et de
+        la simulation photoy
+        - Creation de la methode 'main'
+        
+Fichier         : moteurPap.py
+version         : 2016.02.15
+branch          : master
+Modification    : 
+        - Modif mineur : ajout ajout de 'm_ --> Module au lexique
+        
+Fichier         : pillowSubstract.py
+Version         : 2016.02.15
+branch          : master
+Modification    :
+        - Creation du module 'pillowSubstract'
+        - Creation de la methode 'pilSubst'
+        
+------------------------------------------------------------------------------------------
+Fichier         : mainPi.py
+version         : 2016.03.05
+branch          : master
+Modification    : 
+        - Création de la methode 'f_videoSequence' + ajout d'une entree '4 - test' dans
+        le menu
+
+------------------------------------------------------------------------------------------
+Fichier         : mainPi.py
+version         : 2016.03.08
+branch          : master
+Modification    : 
+        - Modif mineur : déplacecement de la commande 'self.i_Camera.start_preview()'.
+        elle a ete placer avant les boucle for des methodes 'f_scan' et 'f_prevSan'
+        - Ajout d'une banniere a l'ouverture du programme en mode console
+
+        
+Fichier         : moteurPap.py
+version         : 2016.03.08
+branch          : master
+Modification    : 
+        - Modif mineur : Mise en commentaire de tous les 'dbgMsg'
+
+------------------------------------------------------------------------------------------
+Fichier         : pillowSubstract.py
+version         : 2016.03.16
+branch          : master
+Modification    : 
+        - Modif mineur : Ajout de l'information "demarrage en mode root"
+        au lancemant du script
+        - Modification du nom generer. Il reprend desormais le nom du model
+        - Ajout d'un docType
+        
+------------------------------------------------------------------------------------------
+Fichier         : moteurPap.py
+version         : 2016.03.17
+branch          : master
+Modification    : 
+        - Modif mineur : ajout d'un commentaire dans le docType

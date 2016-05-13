@@ -1,0 +1,397 @@
+[ Descriptif du projet Scanner 3D ]
+
+Objectif :  Scanner une pièce en 3D par l'assemblage d'une série de clichés 
+            pris a intervals régulier autour de la piece
+            
+Descriptif de fonctionnement:
+
+    Une pièce 3D est posée sur un plateau tournant actionner par un moteur pas à pas. Une photo de
+    la pièce sera prise à intervals régulier avec la caméra du Raspberry Pi.
+    Ces photos seront stockées dans un dossier spécifique dont l'emplacement pourra être 
+    definie avant le début des prise de vues. Les photos feront l'objet d'un traitemant
+    ultérieur sur un logiciel tiers en vue de l'extraction et de la renconstruction en 3D 
+    de la piece numerisée.
+    
+Détail de fonctionnement :
+
+    LE moteur Pas à pas ainsi que la camera seront comander par le Raspeberry. Aucune photos ne
+    pourrat être prise si le moteur P.A.P est en cours de fonctionnement et inversement, le moteur
+    pas à pas ne pourra pas se lancer tant que la photo ne sera pas validée. 
+        --> gestion des interruptions
+        --> Les paramètres du moteurs pas à pas seront initialement renseignee selon les caracteristique
+        du moteur pas à pas que j'utiliserai (Nombre de pas par tour et angle par pas). Ces caracteristques
+        pouvant évolué en fonction des moteur pas à pas, l'interface graphique doit pouvoir modifier ces
+        parametres.
+        
+    
+    Le nombre de prise de vues dois pouvoir être définie en debut de shooting
+    depuis l'interface graphique
+        --> l'angle appliquer par le moteur pas a pas entre chaque prises de vues doit donc être 
+        déterminer de la façon suivante : 360 (un tour) / nombre de prise de vues
+    
+    Le point focal de la PiCam doit pouvoir être ajuster facillement sur le centre du plateau de
+    prise de vue
+        --> un système d'écrou / contre écrou sur une tige filletée ou un système de pince automatique
+        avec un ressort qu'il faut compresser pour dévérouiller la pince
+        --> depuis l'interface graphique, faire appraitre en supperposition un cilindre avec son
+        centre et controller visuellement l'allignement entre le centre du plateau et le centre
+        du cilindre (comme orus mais en mieu)
+    
+    La reconstitution de l'image en 3D sera effectué dans un second temps. Chaque image sera analiysée
+    par le logiciel pour en ressortir une vue en 3D de l'image en 2D. Cette vue en 3D sera alors
+    combiné aux autre vues de la même piece mais pris sous un angle diférent. On parle de PHOTOGRAMETRIE
+        --> identifier les diférents logiciels capable d'effectuer un tel traitemant
+        --> trouver des tutoriels approprié à chacun des logiciels
+
+                [ piste : ]
+                
+                == Inseight 3D ==
+                * https://www.google.fr/?gws_rd=ssl#q=insight+3d+tutorial
+                
+                == Atlas (scan laser) ==
+                * http://www.freelss.org/
+                * http://www.framboise314.fr/un-scanner-3d-a-base-de-raspberry-pi-sur-kickstarter/
+                
+                == Python Photogrammetry Toolbox ==
+                * http://184.106.205.13/arcteam/ppt.php
+                * http://repos.archeos.eu/apt/pool/main/p/ppt/
+                * http://vai.uibk.ac.at/dadp/doku.php?id=ppt_loewen_en
+                * http://arc-team-open-research.blogspot.fr/2012/12/how-to-make-3d-scan-with-pictures-and.html
+                
+                == OpenMVG (une évolution de Python Photogrammetry Tool) ==
+                * http://imagine.enpc.fr/~moulonp/openMVG/
+                
+                [ a creuser : ]
+                
+                * http://www.3dvf.com/dossier-770-2-scan-3d-low-cost-logiciels.html
+                * https://www.google.fr/search?q=photogramm%C3%A9trie&biw=1920&bih=945&source=lnms&sa=X&ved=0CAYQ_AUoAGoVChMIn6Tk2aTbxgIVUirbCh0FSAFW&dpr=1#q=photogrammetry%20software
+                * https://en.wikipedia.org/wiki/Comparison_of_photogrammetry_software
+                * http://fablabo.net/wiki/Scan3D
+                * http://www.stereo-club.fr/TEMPO/spip.php?page=accueil
+                    # Stereo club Français
+                
+                [ Les + prometeurs : ]
+                
+                == Autodesk Memento ==
+                * https://memento.autodesk.com/try-memento
+                * https://memento.autodesk.com/resources
+                
+                == VisualSFM == (loin derriere Memento et necessite un post-traitemant avec MeshLab)
+                * http://ccwu.me/vsfm/index.html
+                * http://combiencaporte.blogspot.fr/2012/07/la-photogrammetrie-visualsfm-et-meshlab.html
+                
+                == MeshLab == ( de toute façon les autres soft neccessite un poste traitemant avec ...)
+                * https://www.youtube.com/watch?v=aoDLrXp1sfY&list=PL60873C7E6835B52F
+                * https://youtu.be/56wuxAKBhME
+                * http://arc-team-open-research.blogspot.fr/2012/12/how-to-make-3d-scan-with-pictures-and.html
+ 
+
+###################################################################################################################################
+[ Lexique ]
+
+*** NOM : ***               *** Définission : ***
+
+PAP                             Moteur Pas à Pas
+
+PiCam                           Camera du Raspberry Pi
+
+RPi                             Raspberry Pi
+
+etiCha_[chaine_de_caractere]    indique que l'objet désigner est un ensemble [étiquette + champ de saisie]
+                                dans l'interface graphique
+                                
+fen[chaine_de_caractere]        indique que l'objet désigner est une fénêtre dans l'interface graphique
+
+btn[chaine_de_caractere]        indique que l'objet désigner est un bouton dans l'interface graphique
+
+eti[chaine_de_caractere]        indique que l'objet désigner est une étiquette dans l'interface graphique
+
+cha[chaine_de_caractere]        indique que l'objet désigner est un champ de saisie dans l'interface graphique
+                
+###################################################################################################################################
+[ Listes des étapes intermédiaires ]
+
+- Etude logiciel
+        [ x ]   : Rechercher et identifier les diférentes solutions disponibles pour la reconstruction en 3D
+        
+- Diseign / concept
+    * les accéssoires
+    
+        [ x ]   : Modéliser le PAP
+                    # le fichier step à été trouver dans grabCAD
+                
+        [ x ]   : Modéliser le driver du PAP
+                    # le fichier step à été trouver dans grabCAD puis retraivailler sous FreeCAD
+                    
+        [ x ]   : Modeliser le RPi
+                    # le fichier step à été trouver dans grabCAD puis retraivailler sous FreeCAD
+                    
+        [ x ]   : Modéliser la PiCam
+                    # le fichier step à été trouver dans grabCAD
+                    
+        [ x ]   : Modéliser un conncteur d'alim femelle pour l'alimentation de l'ensemble
+                    # La pièce à été réalisé sous FreeCAD et exporter au format STEP
+                    
+        [ x ]   : Modéliser les ressorts
+                    # La pièce à été réalisé sous FreeCAD et exporter au format STEP
+        
+    * Structure
+        
+        [ x ]   : Conceptualiser la structure
+        
+        [ x ]   : Modéliser la structure
+                    # Les pièces ont été réalisées sous FreeCAD. Elle font partie de la modelisation complète.
+                    # le fichier de modélisation complète s'appel : scanner3D.FCStd
+                    # La structure est composé de 6 pieces
+                    #
+            [ x ]   # base              : C'est l'élément principal qui accueil la baseHaute,
+                    #                     l'Intermédiaire et l'invTun.
+                    #
+            [ x ]   # baseHaute         : Cet élément repose à la fois sur la Base et sur l'Intermédiaire.
+                    #
+            [ x ]   # intermédiaire     : Cet éléments placé entre la Base et la baseHaute sert de support
+                    #                     à la baseHaute, au supportMoteur et au fixDriver
+                    #
+            [ x ]   # supportMoteur     : Il repose sur l'Intermédiaire et permet au PAP d'être suffisament
+                    #                     haut pour atteindre la rouePlateau
+                    #
+            [ x ]   # fixDriver         : Equere située sous l'Intermediaire et permet de fixer le driver du PAP
+                    #
+            [ x ]   # supportTiges      : Il Maintient les 2 tiges Rectifiées qui font partie du système de Traveling
+        
+        [ x ]   : Imprimer / Réaliser la structure
+            [ x ]   # base              : Imprimer
+            [ x ]   # baseHaute         : Imprimer
+            [ x ]   # intermédiaire     : Imprimer
+            [ x ]   # supportMoteur     : Imprimer
+            [ x ]   # fixDriver         : Imprimer
+            [ x ]   # supportTiges      : Imprimer
+        
+    * Plateau tournant
+    
+        [ x ]   : Conceptualiser l'ensemble plateau tournant
+        
+        [ x ]   : Modéliser l'ensemble plateau tournant
+                    # Les pièces ont été réalisées sous FreeCAD. Elle font partie de la modelisation complète.
+                    # le fichier de modélisation complète s'appel : scanner3D.FCStd
+                    # L'ensemble plateau tournant est composeé de 3 pièces + des fixations
+                    #
+            [ x ]   # Plateau            : Il vient recouvrir l'ensemble et est maintenu par les fixations
+                    #                     Il y a en faite 2 plateau, 1 blanc de 3mm et un noir de 5 mm
+                    #
+            [ x ]   # rouePlateau        : elle est posée dans la baseHaute du scanner et est solidaire
+                    #                     du plateau grace aux fixations
+                    #
+            [ x ]   # Pignon             : Il engraine, par l'interrieur, la rouePlateau.
+                    #                     Il est fixé sur le PAP
+                    #
+            [ x ]   # Fixations (2x(x4)) : Maintiennent le plateau et la rouePlateau.
+                    #                     Une partie Hexagonale viens s'insérer dans les plateaux,
+                    #                     une partie ronde viens s'insérer dans la rouePlateau.
+                    #                     Deux taille différente pour s'adapter à l'épésseur des différent plateau
+                                          
+        [ x ]   : Imprimer /réaliser l'ensemble plateau tournant
+            [ x ]   # Le plateau        : Il a été réaliser à la découpeuse laser (FacLAB)
+                    #                     Pour permetre un contrast efficace par rapport au pièce scannée,
+                    #                     il à été découper en blanc et en noir. Les deux assemblées donnent
+                    #                     un plateau reversible .
+                    #
+            [ x ]   # La rouePlateau    : Elle a été réaliser à la découpeuse laser (FacLAB)
+                    #
+            [ x ]   # Le Pignon         : Il a été découper avec Charlotte notre CNC (Merci Gille)
+                    #
+            [ x ]   # Les Fixations     : Pièces à imprimer
+        
+    * Prise de vue
+    
+        [ x ]   : Conceptualiser le système de traveling du RPi
+        
+        [ x ]   : modéliser le système de traveling du RPi
+                    # Le Traveling est une pince en compression qui maitien 2 tige rectifées.
+                    # Les 2 tiges rectifiées ont été récupérer dans des cartouches laser A3
+                    # La machoire et maintenue par 2 gros ressort acheté chez Leroy Merlin
+                    
+        [ x ]   : Imprimer / réaliser le système de traveling du RPi
+    
+    
+        [ x ]   : Conceptualiser le système de monter / descente (moveUp) du RPi
+
+        [ x ]   : modéliser le moveUp
+                    # comme pour le traveling, le moveUp est une pince en compression
+                    # qui se déplace le long de 2 tiges rectifiées.
+                    # Le plateau du RPi doit pouvoir s'incliner pour changer l'ange de prise de vue.
+                    
+        [ x ]   : Imprimer / réaliser le moveUp
+
+        
+        [ x ]   : Conceptualiser les passes câbles
+                    # Les passes câbles sont une varriente de la chaine réalisez pour le projet Effie2
+        
+        [ x ]   : modéliser les passes câbles
+
+        [ x ]   : Imprimer / réaliser les passes câbles
+
+        
+- Matériel
+    * Raspberry Pi
+    
+        [ x ]   : Test photographie
+                    # Mise en oeuvre de la PiCam en mode photo
+                    # utilisation de la PiCam dans un script python
+                    # enregistrement, stockage et traitemant des clichés générés
+                
+        [ x ]   : Test moteur Pas à Pas
+                    # Utilisation d'un PAP avec le RPi
+                    # validation du moteur PAP de Daniel
+                
+- Programation
+        [ x ]   : utilisation PiCam
+                    # Les différent paramètre de la PiCam ont été identifié
+                    # N.B : pour obtenir une qualité constante des clichées, les modes automatiques
+                    # ont été désactiver. Un échantillonage est effectue au lancement de l'application.
+                    # Cet echantillonage sert de referance pout tous les clichés ou séquences qui seront
+                    # pris par la suite.
+                    
+        [ x ]   : utilisation d'un PAP
+                    # Le script de test permet de faire tourner le moteur avec un angle dont la valeur est
+                    # déterminée par l'utilisateur au début de chaque boucles. Une valeur positive fait
+                    # touner le moteur dans le sens horraire. Une valeur négative fait tourner le moteur
+                    # dans le sens anti-horraire
+        
+        [ x ]   : utilisation combiné de la PiCam, du moteur PAP sur un RPi
+        
+        [   ]   : gestion de la sortie (stockage des images)
+        
+        [   ]   : création d'un interface graphique pour piloté l'ensemble de façon conviviale
+        
+        [ / ]   : trouver un nom impeu "Fun" à l'application
+                    # pour l'instant, seul le nom du scanner a été trouvé (ID-FIX)
+
+###################################################################################################################################
+[ Interface graphique ]
+
+Dans cette section seront mentionner :
+    - La déscription de l'ensemble des éléments présent dans l'interface graphique
+    - Le principe de fonctionnement ou d'action associer à chacun des éléments
+    
+[   ]   fenPrincipal :
+  |         # C'est la fenêtre qui apparait lorsqu'on ouvre l'application. A partir de cette fenêtre,
+  |         # on lance la séquence de numérisation ; on accède aux réglages (fenêtre différente) ;
+  |         # on à un visuel sur l'image en cours de numérisation ; on à accès à des informations sur le déroulement
+  |         # de la séquence en cours
+  |
+  |-----[   ]   btnReglage :
+  |       |         # Permet d'accèder à la fenêtre de reglage
+  |       |         # N.B : ce bouton peut être 2 onglet qui permettent de passer d'une fenêtre à l'autre.
+  |       |
+  |       *-----[   ]   fenReglage :
+  |               |         # Cette Fenêtre permet de définir certain éléments et les enregistre dans un fichier ".ini"
+  |               |
+  |               |---------[   ]   etiCha_[nom des photos] :
+  |               |                     # début du nom des photos qui vont être prises. initialement, le nom porposé sera "scn".
+  |               |                     # Ce nom sera automatiquement suivi d'une valeur nummerique commançant à "000"
+  |               |                     # et incrémenter de 1 à chaque nouvelle photos. cette valleur est remise à 0
+  |               |                     # à chaque nouvelle séquence de prise de vue. en cas de remise des paramètres par défaut,
+  |               |                     # la valeur proposé sera alors : "scn000.png"
+  |               |
+  |               |---------[   ]   etiCha_[emplacement] :
+  |               |                     # Pour définir l'emplacement (local ou distant) ou seront stocké les photos.
+  |               |                     # Prévoir (si c'est possible) un bouton permettant d'aller chercher
+  |               |                     # le chemin de destination. Le chemin par défaut sera : "./scan/"
+  |               |
+  |               |---------[   ]   etiCha_[nombre de photos par révolution] :
+  |               |                     # Le nombre de photos qui doivent être prises lors de l'éxecution d'une séquence doit
+  |               |                     # être une puissance de 2 pour que le modulo de 4096 / nombre_de_photos = 0.
+  |               |                     # Un champ vérouiller nous informe alors de l'angle (en degrès) entre chaque photos
+  |               |                     # par défaut la valeur est de 16
+  |               |
+  |               |---------[   ]   btnDefaut :
+  |               |                     # Ce bouton remet toutes les valeurs par défaut
+  |               |
+  |               |---------[   ]   etiCha_[chemin_du_profil] :
+  |               |                     # Pour définir le chemin ou sera stocker le profil
+  |               |                 
+  |               |---------[   ]   etiCha_[nom_du_profil] :
+  |               |                     # Le nom du profil en .ini
+  |               |                     # c'est le fichiers dans lequel est consigné les paramètres définit sur cette page
+  |               |
+  |               *---------[   ]   btnSaveProfil :
+  |                                     # Permet de créer le fichier de configuration
+  |                                     # la classe "QFileDialog" accessible depuis : "PyQt5.QtWidgets"
+  |
+  |-----[   ]   frameVisualisation :
+  |                 # Frame permettant la visualisation de la pièce avant et pendant les prises de vues
+  |
+  |-----[   ]   btnCadrages :
+  |                 # enemble de boutons permettant de déplacer un volume en superposition du frameVisualisation.
+  |                 # Ce volume permet de cadrer le plateau quelque soit la position du RPi.
+  |                 # Ces boutons peuvent êtres placer dans un cadre spécifique en bas de frameVisualisation
+  |
+  
+
+###################################################################################################################################
+[ Problèmatique ]
+
+Ici vont être consigné toutes les problèmatique identifier et leur éventuel solutions
+
+    -   Le Capteur de la PiCam étant trop sensible, il faut donc faire les réglages à la main et ne pas laisser
+        les modes automatiques
+        
+    -   Le logiciel voyant des ombres sur les clichés générées par le RPi, un traitemant des photos doit être effectué pour
+        les recadrer au plus juste. Ce Traitemant est effectuer avec the gimp.
+        ==> Trouvez comment faire une macro ou un script python pour effectuer cette tache de façon automatique.
+        ==> Déscriptif de la tache :
+            * Importer toutes les photos d'un coup sous forme de calque
+            * Créer une selection autour de la forme et supprimer toutes les zones extérieur à la selection
+            * Sauvegarde individuellement chacun des calques sous un non de photos unique
+    
+    -   Le logiciel doit être installé sur un PC indépendant du RPi. Le logiciel doit donc pouvoir commander le RPi et récupérer
+        le flux video pour la prévisualisation et l'enregistrement des photos
+        ==> il est a priori possible de lancer l'envornement X en ssh en choisissant dans putty xForwarding mais la prévisualisation
+            dépendant du GPU du RPi, il n'est pas possible de prévisualiser l'image au traver du réseau. La prévisualisation 
+            devrat donc être effectue en envoyant des photos sur l'interface distant.
+
+###################################################################################################################################
+
+[ Journal de manip ]
+
+20150726 :
+
+Test de reconstitution en 3D avec Memento d'Autodesk par Photogrametrie
+
+Un ensemble de 22 photos d'une même pièce à été prise sous différent point de vue.
+
+Condition de prise de vue de la pièce :
+    - Une pièce (la grenouille duVoLAB) à été placer au centre d'un plateau tournant qui a été actionner à la main.
+    - Une source de lumière blanche diffuse depuis un parapluie photos. L'éclairage n'ayant pas été optimisé,
+    il reste des zones d'ombres sous la pièce.
+    - Un appareil photos Numérique sur pied depuis le quel les photos ont été prises en ne faisant la mise au point
+    que lors de la première photos.
+
+1) Il faut d'abord selectionner les photos en cliquant sur le bouton "Photos"
+    --> une nouvelle fenêtre apparait alors nous demandant si l'on veut aller chercher les photos
+    local ou dans le cloud d'Autodesk 360
+2) L'ensemble des photos doivent ensuite être téléversées dans le logiciel Memento à l'aide du bouton "Upload".
+Lorsque le téléversement est terminer, on doit recliquer au même endroit pour générer la forme en 3D.
+On doit alors renseigner un nom et un emplacment pour le fichier qui porte alors l'extention
+
+3) La forme 3d générées apparait dans la section "Open" de la fenêtre
+
+4) Lorsqu'on clique sur le nom de notre pièces on accès à la vue en 3D. On peut basculer de
+la page principal à l'editeur en cliquant sur les boutons "Dashbord" et "Editor"
+
+5) dans l'editeur, la vue par défaut est la vue Structurée (Textured). Les autres modes disponibles sont :
+    - Solid
+    - Solid with wirerame
+    - Textured with wireframe
+    - X-ray
+
+6) sur la gauche de l'écran permetent d'accèder à diférentes option de visualisation, d'edition,
+d'analyse, de travail sur le nombre et la taille des Mesh. Les deux derniers icôn (en bas) permetent 
+lancer l'impression en 3D, d'exporter la pièces pièce au fromat STL, OBJ, PLY, FBX et RCP 
+de créer une video, ou générer une image au format PNG
+
+Résultat et Conclusions :
+
+Le logiciel demande une machine relativement puissante mais effectue le travail proprement et sans
+complication execive pour l'utilisateur. Il est pour l'instant le meilleur logiciel du genre.

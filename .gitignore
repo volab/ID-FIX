@@ -1,0 +1,25 @@
+﻿## [ .gitignore ]
+
+## Liste des fichiers et dossiers à ignorer
+
+#.gitignore
+
+## [ Dossiers a ignorer ]
+
+01_userDoc/blog/
+03_software/test/
+05_*/
+06_*/
+07_*/
+*_v/
+
+
+## [ listes des extentions a ignorer ]
+
+*.*~
+*.FCStd1
+*.264
+*.mkv
+*.mp4
+Thumbs.db
+
